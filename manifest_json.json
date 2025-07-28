@@ -1,0 +1,55 @@
+{
+  "name": "Zenvelope",
+  "short_name": "Zenvelope",
+  "description": "Organize your texts and notes efficiently",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f5f5f5",
+  "theme_color": "#4A90A4",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "en",
+  "categories": ["productivity", "utilities"],
+  "icons": [
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIj48cmVjdCB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgZmlsbD0iIzRBOTBBNCIvPjx0ZXh0IHg9IjYwIiB5PSI3MCIgZmlsbD0iIzczMyIgZm9udC1zaXplPSI0MCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+WjwvdGV4dD48L3N2Zz4=",
+      "sizes": "120x120",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIj48cmVjdCB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgZmlsbD0iIzRBOTBBNCIvPjx0ZXh0IHg9IjE2MCIgeT0iMTMwIiBmaWxsPSIjNzMzIiBmb250LXNpemU9IjcwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5aPC90ZXh0Pjwvc3ZnPg==",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgZmlsbD0iIzRBOTBBNCIvPjx0ZXh0IHg9IjI1NiIgeT0iMzU2IiBmaWxsPSIjNzMzIiBmb250LXNpemU9IjEyMCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+WjwvdGV4dD48L3N2Zz4=",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Add New Folder",
+      "short_name": "New Folder",
+      "description": "Create a new folder",
+      "url": "/?action=new-folder",
+      "icons": [
+        {
+          "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI5NiIgaGVpZ2h0PSI5NiI+PHJlY3Qgd2lkdGg9Ijk2IiBoZWlnaHQ9Ijk2IiBmaWxsPSIjNEE5MEE0Ii8+PHRleHQgeD0iNDgiIHk9IjY0IiBmaWxsPSIjZmZmIiBmb250LXNpemU9IjQwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj4rPC90ZXh0Pjwvc3ZnPg==",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1NDAiIGhlaWdodD0iNzIwIj48cmVjdCB3aWR0aD0iNTQwIiBoZWlnaHQ9IjcyMCIgZmlsbD0iI2Y1ZjVmNSIvPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSI1NDAiIGhlaWdodD0iODAiIGZpbGw9IiM0QTkwQTQiLz48dGV4dCB4PSIyNzAiIHk9IjUwIiBmaWxsPSIjZmZmIiBmb250LXNpemU9IjI0IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5aZW52ZWxvcGU8L3RleHQ+PC9zdmc+",
+      "sizes": "540x720",
+      "type": "image/svg+xml",
+      "form_factor": "narrow"
+    }
+  ]
+}

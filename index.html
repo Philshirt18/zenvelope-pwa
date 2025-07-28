@@ -1,0 +1,1229 @@
+        // PWA Installation
+        let deferredPrompt;
+        let installButton = null;
+
+        // PWA Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('data:text/javascript;base64,Y29uc3QgQ0FDSEVfTkFNRSA9ICd6ZW52ZWxvcGUtdjEnOwpjb25zdCB1cmxzVG9DYWNoZSA9IFsKICAnLycsCiAgJy9pbmRleC5odG1sJwpdOwoKc2VsZi5hZGRFdmVudExpc3RlbmVyKCdpbnN0YWxsJywgZXZlbnQgPT4gewogIGV2ZW50LndhaXRVbnRpbCgKICAgIGNhY2hlcy5vcGVuKENBQ0hFX05BTUUpCiAgICAgIC50aGVuKGNhY2hlID0+IGNhY2hlLmFkZEFsbCh1cmxzVG9DYWNoZSkpCiAgKTsKfSk7CgpzZWxmLmFkZEV2ZW50TGlzdGVuZXIoJ2ZldGNoJywgZXZlbnQgPT4gewogIGV2ZW50LnJlc3BvbmRXaXRoKAogICAgY2FjaGVzLm1hdGNoKGV2ZW50LnJlcXVlc3QpCiAgICAgIC50aGVuKHJlc3BvbnNlID0+IHJlc3BvbnNlIHx8IGZldGNoKGV2ZW50LnJlcXVlc3QpKQogICk7Cn0pOw==')
+                .then(registration => {
+                    if (window.DEBUG) console.log('PWA: Service Worker registered');
+                })
+                .catch(error => {
+                    if (window.DEBUG) console.log('PWA: Service Worker registration failed');
+                });
+            });
+        }
+
+        // PWA Install Prompt
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            showInstallButton();
+        });
+
+        function showInstallButton() {
+            if (!installButton) {
+                installButton = document.createElement('button');
+                installButton.innerHTML = '📱 Install App';
+                installButton.className = 'install-btn';
+                installButton.onclick = installPWA;
+                document.body.appendChild(installButton);
+                if (window.DEBUG) console.log('PWA: Install button shown');
+            }
+        }
+
+        function installPWA() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        if (window.DEBUG) console.log('PWA: Install accepted');
+                        if (installButton) {
+                            installButton.style.display = 'none';
+                        }
+                    }
+                    deferredPrompt = null;
+                });
+            }
+        }        // Test function to verify button works
+        window.testAddFolder = function() {
+            console.log('Test function called - button is working!');
+            showAddFolderModal();
+        };
+
+        // Make functions globally available for debugging
+        window.showAddFolderModal = showAddFolderModal;
+        window.addFolder = addFolder;<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zenvelope</title>
+    
+    <!-- PWA Meta Tags -->
+    <meta name="description" content="Organize your texts and notes efficiently with Zenvelope">
+    <meta name="theme-color" content="#4A90A4">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Zenvelope">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIlplbnZlbG9wZSIsCiAgInNob3J0X25hbWUiOiAiWmVudmVsb3BlIiwKICAiZGVzY3JpcHRpb24iOiAiT3JnYW5pemUgeW91ciB0ZXh0cyBhbmQgbm90ZXMgZWZmaWNpZW50bHkiLAogICJzdGFydF91cmwiOiAiLyIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiI2Y1ZjVmNSIsCiAgInRoZW1lX2NvbG9yIjogIiM0QTkwQTQiLAogICJpY29ucyI6IFsKICAgIHsKICAgICAgInNyYyI6ICJkYXRhOmltYWdlL3N2Zyt4bWw7YmFzZTY0LFBITjJaeUI0Yld4dWN6MGlhSFIwY0RvdkwzZDNkeTUzTXk1dmNtY3ZNakF3TUM5emRtY2lJSGRwWkhSb1BTSXhNakFpSUdobGFXZG9kRDBpTVRJd0lqNDhjbVZqZENCM2FXUjBhRDBpTVRJd0lpQm9aV2xuYUhROUlqRXlNQ0lnWm1sc2JEMGlJelJCT1RCQU5DSWdMejQ4ZEdWNGRDQjRQU0kyTUNJZ2VUMGlOekFpSUdacGJHdzlJaU0zTXpNaUlHWnZiblF0YzJsNlpUMGlOREFpSUhSbGVIUXRZVzVqYUc5eVBTSnRhV1JrYkdVaVBqWmFQQzkwWlhoMFBqd3ZjM1puUGc9PSIsCiAgICAgICJzaXplcyI6ICIxMjB4MTIwIiwKICAgICAgInR5cGUiOiAiaW1hZ2Uvc3ZnK3htbCIKICAgIH0sCiAgICB7CiAgICAgICJzcmMiOiAiZGF0YTppbWFnZS9zdmcreG1sO2Jhc2U2NCxQSE4yWnlCNGJXeHVjejBpYUhSMGNEb3ZMM2QzZHk1M015NXZjbWN2TWpBd01DOXpkbWNpSUhkcFpIUm9QU0l4T1RJaUlHaGxhV2RvZEQwaU1Ua3lJajQ4Y21WamRDQjNhV1IwYUQwaU1Ua3lJaUJvWldsbmFIUTlJakU1TWlJZ1ptbHNiRDBpSXpSQk9UQkJOQ0lnTHo0OGRHVjRkQ0I0UFNJeE5qQWlJSGs5SWpFek1DSWdabWxzYkQwaUl6Y3pNeUlnWm05dWRDMXphWHBsUFNJM01DSWdkR1Y0ZEMxaGJtTm9iM0k5SW0xcFpHUnNaU0krTmxvOEwzUmxlSFErUEM5emRtYysrIiwKICAgICAgInNpemVzIjogIjE5MngxOTIiLAogICAgICAidHlwZSI6ICJpbWFnZS9zdmcreG1sIgogICAgfSwKICAgIHsKICAgICAgInNyYyI6ICJkYXRhOmltYWdlL3N2Zyt4bWw7YmFzZTY0LFBITjJaeUI0Yld4dWN6MGlhSFIwY0RvdkwzZDNkeTUzTXk1dmNtY3ZNakF3TUM5emRtY2lJSGRwWkhSb1BTSTFNVElpSUdobGFXZG9kRDBpTlRFeUlqNDhjbVZqZENCM2FXUjBhRDBpTlRFeUlpQm9aV2xuYUhROUlqVXhNaUlnWm1sc2JEMGlJelJCT1RCQU5DSWdMejQ4ZEdWNGRDQjRQU0kxTWpRaUlIazlJaUl6TlRZaUlHWnBiR3c5SWlNM016TWlJR1p2Ym5RdGMybDZaVDBpTVRJd0lpQjBaWGgwTFdGdVkyaHZjajBpYldsa1pHeGxJajQyV2p3dmRHVjRkRDQ4TDNOMlp6ND0iLAogICAgICAic2l6ZXMiOiAiNTEyeDUxMiIsCiAgICAgICJ0eXBlIjogImltYWdlL3N2Zyt4bWwiCiAgICB9CiAgXSwKICAiaWRlbnRpdHkiOiBbCiAgICB7CiAgICAgICJuYW1lIjogIm9yaWdpbl9hc3NvY2lhdGlvbiIsCiAgICAgICJpY29ucyI6IFsKICAgICAgICB7CiAgICAgICAgICAic3JjIjogImRhdGE6aW1hZ2Uvc3ZnK3htbDtiYXNlNjQsUEhOMlp5QjRiV3h1Y3owaWFIUjBjRG92TDNkM2R5NTNNeTUyY21jdk1qQXdNQzl6ZG1jaUlIZHBaSFJvUFNJeE1qQWlJR2hsYVdkb2REMGlNVEl3SWo0OGNtVmpkQ0IzYVdSMGFEMGlNVEl3SWlCb1pXbG5hSFE5SWpFeU1DSWdabWxzYkQwaUl6UkJPVEJCTkNJZ0x6NDhkR1Y0ZENCNFBTSTJNQ0lnZVQwaU56QWlJR1pwYkd3OUlpTTNNek1pSUdadmJuUXRjMmw2WlQwaU5EQWlJSFJsZUhRdFlXNWphRzl5UFNKdGFXUmtiR1VpUGpaYVBDOTBaWGgwUGp3dmMzWm5QZz09IiwKICAgICAgICAgICJzaXplcyI6ICIxMjB4MTIwIgogICAgICAgIH0KICAgICAgXQogICAgfQogIF0KfQ==">
+    
+    <!-- PWA Icons -->
+    <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIj48cmVjdCB3aWR0aD0iMTIwIiBoZWlnaHQ9IjEyMCIgZmlsbD0iIzRBOTBBNCIvPjx0ZXh0IHg9IjYwIiB5PSI3MCIgZmlsbD0iIzczMyIgZm9udC1zaXplPSI0MCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+WjwvdGV4dD48L3N2Zz4=" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIj48cmVjdCB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgZmlsbD0iIzRBOTBBNCIvPjx0ZXh0IHg9IjE2MCIgeT0iMTMwIiBmaWxsPSIjNzMzIiBmb250LXNpemU9IjcwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5aPC90ZXh0Pjwvc3ZnPg==">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #f5f5f5;
+            min-height: 100vh;
+        }
+
+        .header {
+            background-color: #4A90A4;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .search-container {
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 20px;
+            font-size: 16px;
+            border: 2px solid #ddd;
+            border-radius: 25px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .search-input:focus {
+            border-color: #4A90A4;
+        }
+
+        .search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-top: 10px;
+            z-index: 1000;
+            display: none;
+        }
+
+        .search-result-item {
+            padding: 10px 20px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            margin: 5px;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+
+        .search-result-item:hover {
+            background-color: #f0f0f0;
+        }
+
+        .search-result-item.highlighted {
+            border-color: #8B5CF6;
+            background-color: #f9f5ff;
+        }
+
+        .folders-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .folder-card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+            position: relative;
+            min-height: 200px;
+        }
+
+        .folder-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+        }
+
+        .delete-folder-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #ff4757;
+            color: white;
+            border: none;
+            padding: 5px 8px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 12px;
+            opacity: 0;
+            transition: all 0.3s;
+            width: 25px;
+            height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .folder-card:hover .delete-folder-btn {
+            opacity: 1;
+        }
+
+        .delete-folder-btn:hover {
+            background: #ff3742;
+            transform: scale(1.1);
+        }
+
+        .folder-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .folder-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .folder-description {
+            color: #666;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .arrow-icon {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            font-size: 24px;
+            color: #4A90A4;
+        }
+
+        .add-folder-btn {
+            background: #4A90A4;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            font-size: 30px;
+            cursor: pointer;
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            box-shadow: 0 4px 12px rgba(74, 144, 164, 0.3);
+            transition: all 0.3s;
+        }
+
+        .add-folder-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(74, 144, 164, 0.4);
+        }
+
+        .text-list {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .text-item {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 8px;
+            margin: 5px 0;
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .text-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .text-item-content {
+            flex: 1;
+        }
+
+        .delete-text-btn {
+            background: #ff4757;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+            opacity: 0;
+            transition: all 0.3s;
+            margin-left: 10px;
+        }
+
+        .text-item:hover .delete-text-btn {
+            opacity: 1;
+        }
+
+        .delete-text-btn:hover {
+            background: #ff3742;
+            transform: scale(1.1);
+        }
+
+        /* Pastellfarben für Texte */
+        .text-item:nth-child(8n+1) { background-color: #fef3c7; } /* Soft Gelb */
+        .text-item:nth-child(8n+2) { background-color: #fce7f3; } /* Soft Pink */
+        .text-item:nth-child(8n+3) { background-color: #ddd6fe; } /* Soft Lila */
+        .text-item:nth-child(8n+4) { background-color: #e0e7ff; } /* Soft Blau */
+        .text-item:nth-child(8n+5) { background-color: #d1fae5; } /* Soft Grün */
+        .text-item:nth-child(8n+6) { background-color: #fed7d7; } /* Soft Koralle */
+        .text-item:nth-child(8n+7) { background-color: #e6fffa; } /* Soft Türkis */
+        .text-item:nth-child(8n+8) { background-color: #fef9e7; } /* Soft Beige */
+
+        .text-item:last-child {
+            border-bottom: none;
+        }
+
+        .text-viewer {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            margin-top: 20px;
+            min-height: 400px;
+        }
+
+        .text-content {
+            white-space: pre-wrap;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .back-btn {
+            background: #4A90A4;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: background-color 0.3s;
+        }
+
+        .back-btn:hover {
+            background-color: #3a7a94;
+        }
+
+        .add-text-btn {
+            background: #4A90A4;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 20px 0;
+            transition: background-color 0.3s;
+        }
+
+        .add-text-btn:hover {
+            background-color: #3a7a94;
+        }
+
+        .backup-controls {
+            margin-top: 50px;
+            padding: 20px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            opacity: 0.7;
+            transition: opacity 0.3s;
+        }
+
+        .backup-controls:hover {
+            opacity: 1;
+        }
+
+        .backup-btn {
+            background: #666;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+
+        .backup-btn:hover {
+            background-color: #555;
+        }
+
+        .footer-note {
+            text-align: center;
+            color: #999;
+            font-size: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .emoji-picker {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 5px;
+            max-height: 200px;
+            overflow-y: auto;
+            padding: 10px;
+            background: #f5f5f5;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+
+        .emoji-option {
+            padding: 10px;
+            font-size: 24px;
+            cursor: pointer;
+            text-align: center;
+            border-radius: 5px;
+            transition: background-color 0.2s;
+        }
+
+        .emoji-option:hover {
+            background-color: #e0e0e0;
+        }
+
+        .emoji-option.selected {
+            background-color: #4A90A4;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .modal-input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .modal-textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            min-height: 200px;
+            resize: vertical;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+
+        .modal-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .modal-btn-primary {
+            background: #4A90A4;
+            color: white;
+        }
+
+        .modal-btn-primary:hover {
+            background: #3a7a94;
+        }
+
+        .modal-btn-secondary {
+            background: #ddd;
+            color: #333;
+        }
+
+        .modal-btn-secondary:hover {
+            background: #ccc;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        .install-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #4A90A4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            box-shadow: 0 2px 8px rgba(74, 144, 164, 0.3);
+            transition: all 0.3s;
+            z-index: 1001;
+        }
+
+        .install-btn:hover {
+            background: #3a7a94;
+            transform: scale(1.05);
+        }
+
+        /* PWA Specific Styles */
+        @media (display-mode: standalone) {
+            .install-btn {
+                display: none;
+            }
+            
+            .header {
+                padding-top: 30px; /* Account for status bar */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Zenvelope</h1>
+    </div>
+
+    <div class="container">
+        <!-- Hauptansicht mit Ordnern -->
+        <div id="mainView">
+            <div class="search-container">
+                <input type="text" class="search-input" id="mainSearch" placeholder="Search texts...">
+                <div class="search-results" id="mainSearchResults"></div>
+            </div>
+            
+            <div class="folders-grid" id="foldersGrid">
+                <!-- Folders will be dynamically inserted here -->
+            </div>
+        </div>
+
+        <!-- Folder view -->
+        <div id="folderView" class="hidden">
+            <button class="back-btn" onclick="showMainView()">← Back</button>
+            <h2 id="folderTitle"></h2>
+            
+            <div class="search-container">
+                <input type="text" class="search-input" id="folderSearch" placeholder="Search in this folder...">
+                <div class="search-results" id="folderSearchResults"></div>
+            </div>
+            
+            <button class="add-text-btn" onclick="showAddTextModal()">+ Add Text</button>
+            <div class="text-list" id="textList"></div>
+        </div>
+
+        <!-- Text view -->
+        <div id="textView" class="hidden">
+            <button class="back-btn" onclick="showFolderView()">← Back</button>
+            <h2 id="textTitle"></h2>
+            <div class="text-viewer">
+                <div class="text-content" id="textContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Buttons -->
+    <button class="add-folder-btn" id="addFolderBtn">+</button>
+    
+    <div class="backup-controls">
+        <button class="backup-btn" onclick="createBackup()">Create Backup</button>
+        <button class="backup-btn" onclick="document.getElementById('fileInput').click()">Load Backup</button>
+        <input type="file" id="fileInput" accept=".json" onchange="loadBackup(event)">
+    </div>
+
+    <div class="footer-note">
+        Zenvelope - made with love in Málaga
+    </div>
+
+    <!-- Modals -->
+    <div class="modal" id="addFolderModal">
+        <div class="modal-content">
+            <h3>New Folder</h3>
+            <input type="text" class="modal-input" id="folderNameInput" placeholder="Folder name">
+            <input type="text" class="modal-input" id="folderDescInput" placeholder="Description">
+            <div>
+                <label style="display: block; margin: 10px 0 5px 0; color: #666;">Select icon:</label>
+                <div class="emoji-picker" id="emojiPicker">
+                    <!-- Emojis will be inserted here -->
+                </div>
+                <input type="hidden" id="folderIconInput" value="📁">
+            </div>
+            <div class="modal-buttons">
+                <button class="modal-btn modal-btn-secondary" onclick="closeModal('addFolderModal')">Cancel</button>
+                <button class="modal-btn modal-btn-primary" onclick="addFolder()">Create</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="addTextModal">
+        <div class="modal-content">
+            <h3>New Text</h3>
+            <input type="text" class="modal-input" id="textNameInput" placeholder="Text name">
+            <textarea class="modal-textarea" id="textContentInput" placeholder="Text content"></textarea>
+            <div class="modal-buttons">
+                <button class="modal-btn modal-btn-secondary" onclick="closeModal('addTextModal')">Cancel</button>
+                <button class="modal-btn modal-btn-primary" onclick="addText()">Create</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Debug-Mode
+        window.DEBUG = true;
+        
+        // Data structure
+        let data = {
+            folders: [
+                {
+                    id: 'guests',
+                    name: 'I am a Guest',
+                    description: 'Get tailored responses for guests.',
+                    icon: '💼',
+                    texts: []
+                },
+                {
+                    id: 'hosts',
+                    name: 'I am a Host',
+                    description: 'Get tailored responses for hosts.',
+                    icon: '🔍',
+                    texts: []
+                }
+            ]
+        };
+
+        // Current state
+        let currentFolder = null;
+        let currentText = null;
+
+        // Emoji selection
+        const emojis = [
+            '📁', '📂', '📄', '📃', '📋', '📌', '📍', '📎',
+            '💼', '💾', '📊', '📈', '📉', '📐', '📏', '📝',
+            '✏️', '✒️', '🖊️', '🖌️', '🔍', '🔎', '🔒', '🔓',
+            '🔑', '🗝️', '🔨', '🔧', '🔩', '⚙️', '🗂️', '🗄️',
+            '📚', '📖', '📕', '📗', '📘', '📙', '📓', '📔',
+            '📒', '📰', '🗞️', '📑', '🔖', '🏷️', '💰', '💸',
+            '💳', '💡', '💎', '🎯', '🎨', '🎭', '🎪', '🎬',
+            '🎤', '🎧', '🎵', '🎶', '🎹', '🥁', '🎸', '🎺',
+            '🎻', '🪕', '🎲', '♟️', '🎯', '🎳', '🎮', '🎰',
+            '🧩', '🏠', '🏡', '🏢', '🏣', '🏤', '🏥', '🏦',
+            '🏧', '🏨', '🏩', '🏪', '🏫', '🏬', '🏭', '🏮',
+            '⭐', '🌟', '✨', '⚡', '🔥', '💥', '🌈', '☀️',
+            '🌤️', '⛅', '🌥️', '☁️', '🌦️', '🌧️', '⛈️', '🌩️',
+            '❄️', '☃️', '⛄', '🌬️', '💨', '🌪️', '🌫️', '🌊',
+            '💧', '💦', '🍀', '🌸', '🌺', '🌻', '🌷', '🌹',
+            '🥀', '🌾', '🌿', '☘️', '🍃', '🍂', '🍁', '🌴',
+            '🌵', '🌲', '🌳', '🌱', '🌿', '☘️', '🦋', '🐝'
+        ];
+
+        let selectedEmoji = '📁';
+
+        function setupEmojiPicker() {
+            const picker = document.getElementById('emojiPicker');
+            if (!picker) {
+                console.error('Emoji picker element not found');
+                return;
+            }
+            
+            picker.innerHTML = '';
+            
+            emojis.forEach(emoji => {
+                const option = document.createElement('div');
+                option.className = 'emoji-option';
+                option.textContent = emoji;
+                option.onclick = () => selectEmoji(emoji, option);
+                if (emoji === selectedEmoji) {
+                    option.classList.add('selected');
+                }
+                picker.appendChild(option);
+            });
+            
+            if (window.DEBUG) console.log('Emoji picker setup complete');
+        }
+
+        function selectEmoji(emoji, element) {
+            selectedEmoji = emoji;
+            document.getElementById('folderIconInput').value = emoji;
+            
+            // Update visual selection
+            document.querySelectorAll('.emoji-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            element.classList.add('selected');
+            
+            if (window.DEBUG) console.log('Selected emoji:', emoji);
+        }
+
+        // Initialization
+        function init() {
+            loadFromLocalStorage();
+            renderFolders();
+            setupSearch();
+            setupEmojiPicker();
+            setupEventListeners();
+            
+            if (window.DEBUG) {
+                console.log('Zenvelope initialized in DEBUG mode');
+                console.log('Current data:', data);
+                window.appData = data; // For debug access
+            }
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Add folder button
+            const addFolderBtn = document.getElementById('addFolderBtn');
+            if (addFolderBtn) {
+                addFolderBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if (window.DEBUG) console.log('Add folder button clicked');
+                    showAddFolderModal();
+                });
+                if (window.DEBUG) console.log('Add folder button event listener attached');
+            } else {
+                console.error('Add folder button not found');
+            }
+
+            // Modal close on background click
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('modal')) {
+                    closeModal(e.target.id);
+                }
+            });
+            
+            if (window.DEBUG) console.log('Event listeners setup complete');
+        }
+
+        // LocalStorage
+        function saveToLocalStorage() {
+            localStorage.setItem('textOrganizerData', JSON.stringify(data));
+            if (window.DEBUG) console.log('Data saved to localStorage');
+        }
+
+        function loadFromLocalStorage() {
+            const saved = localStorage.getItem('textOrganizerData');
+            if (saved) {
+                data = JSON.parse(saved);
+                if (window.DEBUG) console.log('Data loaded from localStorage:', data);
+            }
+        }
+
+        // Rendering
+        function renderFolders() {
+            const grid = document.getElementById('foldersGrid');
+            grid.innerHTML = '';
+            
+            data.folders.forEach(folder => {
+                const card = document.createElement('div');
+                card.className = 'folder-card';
+                card.innerHTML = `
+                    <button class="delete-folder-btn" onclick="deleteFolder('${folder.id}', event)">×</button>
+                    <div class="folder-icon">${folder.icon}</div>
+                    <div class="folder-title">${folder.name}</div>
+                    <div class="folder-description">${folder.description}</div>
+                    <div class="arrow-icon">→</div>
+                `;
+                
+                // Add click handler to the card (but not the delete button)
+                card.addEventListener('click', (e) => {
+                    if (!e.target.classList.contains('delete-folder-btn')) {
+                        openFolder(folder.id);
+                    }
+                });
+                
+                grid.appendChild(card);
+            });
+        }
+
+        function renderTexts() {
+            const textList = document.getElementById('textList');
+            textList.innerHTML = '';
+            
+            const folder = data.folders.find(f => f.id === currentFolder);
+            if (!folder || folder.texts.length === 0) {
+                textList.innerHTML = '<p style="color: #666; text-align: center;">No texts available yet</p>';
+                return;
+            }
+            
+            folder.texts.forEach(text => {
+                const item = document.createElement('div');
+                item.className = 'text-item';
+                item.innerHTML = `
+                    <div class="text-item-content" onclick="openText('${text.id}')">
+                        <strong>${text.title}</strong>
+                    </div>
+                    <button class="delete-text-btn" onclick="deleteText('${text.id}', event)">Delete</button>
+                `;
+                textList.appendChild(item);
+            });
+        }
+
+        // Navigation
+        function showMainView() {
+            document.getElementById('mainView').classList.remove('hidden');
+            document.getElementById('folderView').classList.add('hidden');
+            document.getElementById('textView').classList.add('hidden');
+            currentFolder = null;
+            currentText = null;
+        }
+
+        function showFolderView() {
+            document.getElementById('mainView').classList.add('hidden');
+            document.getElementById('folderView').classList.remove('hidden');
+            document.getElementById('textView').classList.add('hidden');
+            currentText = null;
+        }
+
+        function openFolder(folderId) {
+            currentFolder = folderId;
+            const folder = data.folders.find(f => f.id === folderId);
+            document.getElementById('folderTitle').textContent = folder.name;
+            renderTexts();
+            showFolderView();
+            if (window.DEBUG) console.log('Opened folder:', folderId);
+        }
+
+        function openText(textId) {
+            currentText = textId;
+            const folder = data.folders.find(f => f.id === currentFolder);
+            const text = folder.texts.find(t => t.id === textId);
+            document.getElementById('textTitle').textContent = text.title;
+            document.getElementById('textContent').textContent = text.content;
+            document.getElementById('mainView').classList.add('hidden');
+            document.getElementById('folderView').classList.add('hidden');
+            document.getElementById('textView').classList.remove('hidden');
+            if (window.DEBUG) console.log('Opened text:', textId);
+        }
+
+        // Modals
+        function showModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (!modal) {
+                console.error('Modal not found:', modalId);
+                return;
+            }
+            modal.style.display = 'flex';
+            if (window.DEBUG) console.log('Showing modal:', modalId);
+        }
+
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (!modal) {
+                console.error('Modal not found:', modalId);
+                return;
+            }
+            modal.style.display = 'none';
+            if (window.DEBUG) console.log('Closing modal:', modalId);
+        }
+
+        function showAddFolderModal() {
+            if (window.DEBUG) console.log('showAddFolderModal called');
+            
+            try {
+                selectedEmoji = '📁'; // Reset to default
+                
+                // Clear input fields
+                const nameInput = document.getElementById('folderNameInput');
+                const descInput = document.getElementById('folderDescInput');
+                const iconInput = document.getElementById('folderIconInput');
+                
+                if (nameInput) nameInput.value = '';
+                if (descInput) descInput.value = '';
+                if (iconInput) iconInput.value = selectedEmoji;
+                
+                setupEmojiPicker(); // Refresh emoji picker
+                showModal('addFolderModal');
+                
+                if (window.DEBUG) console.log('Add folder modal should be visible now');
+            } catch (error) {
+                console.error('Error in showAddFolderModal:', error);
+            }
+        }
+
+        function showAddTextModal() {
+            showModal('addTextModal');
+        }
+
+        function addFolder() {
+            if (window.DEBUG) console.log('addFolder function called');
+            
+            const nameInput = document.getElementById('folderNameInput');
+            const descInput = document.getElementById('folderDescInput');
+            
+            if (!nameInput || !descInput) {
+                console.error('Input elements not found');
+                return;
+            }
+            
+            const name = nameInput.value.trim();
+            const desc = descInput.value.trim();
+            const icon = selectedEmoji || '📁';
+            
+            if (window.DEBUG) {
+                console.log('Form values:', { name, desc, icon });
+            }
+            
+            if (!name) {
+                alert('Please enter a folder name');
+                return;
+            }
+            
+            const newFolder = {
+                id: 'folder_' + Date.now(),
+                name: name,
+                description: desc,
+                icon: icon,
+                texts: []
+            };
+            
+            data.folders.push(newFolder);
+            saveToLocalStorage();
+            renderFolders();
+            closeModal('addFolderModal');
+            
+            // Reset inputs
+            nameInput.value = '';
+            descInput.value = '';
+            selectedEmoji = '📁';
+            
+            if (window.DEBUG) console.log('Added folder:', newFolder);
+        }
+
+        function addText() {
+            const title = document.getElementById('textNameInput').value.trim();
+            const content = document.getElementById('textContentInput').value.trim();
+            
+            if (!title || !content) {
+                alert('Please fill in all fields');
+                return;
+            }
+            
+            const folder = data.folders.find(f => f.id === currentFolder);
+            const newText = {
+                id: 'text_' + Date.now(),
+                title: title,
+                content: content
+            };
+            
+            folder.texts.push(newText);
+            saveToLocalStorage();
+            renderTexts();
+            closeModal('addTextModal');
+            
+            // Reset inputs
+            document.getElementById('textNameInput').value = '';
+            document.getElementById('textContentInput').value = '';
+            
+            if (window.DEBUG) console.log('Added text:', newText);
+        }
+
+        function deleteText(textId, event) {
+            event.stopPropagation(); // Prevents opening the text
+            
+            const folder = data.folders.find(f => f.id === currentFolder);
+            const textIndex = folder.texts.findIndex(t => t.id === textId);
+            const textTitle = folder.texts[textIndex].title;
+            
+            if (confirm(`Do you really want to delete the text "${textTitle}"?`)) {
+                folder.texts.splice(textIndex, 1);
+                saveToLocalStorage();
+                renderTexts();
+                if (window.DEBUG) console.log('Deleted text:', textId);
+            }
+        }
+
+        function deleteFolder(folderId, event) {
+            event.stopPropagation(); // Prevents opening the folder
+            
+            const folderIndex = data.folders.findIndex(f => f.id === folderId);
+            const folder = data.folders[folderIndex];
+            const folderName = folder.name;
+            const textCount = folder.texts.length;
+            
+            let confirmMessage = `Do you really want to delete the folder "${folderName}"?`;
+            if (textCount > 0) {
+                confirmMessage += `\n\nThis folder contains ${textCount} text(s) that will also be deleted.`;
+            }
+            
+            if (confirm(confirmMessage)) {
+                data.folders.splice(folderIndex, 1);
+                saveToLocalStorage();
+                renderFolders();
+                
+                // If we're currently viewing the deleted folder, go back to main view
+                if (currentFolder === folderId) {
+                    showMainView();
+                }
+                
+                if (window.DEBUG) console.log('Deleted folder:', folderId);
+            }
+        }
+
+        // Search
+        function setupSearch() {
+            const mainSearch = document.getElementById('mainSearch');
+            const folderSearch = document.getElementById('folderSearch');
+            
+            mainSearch.addEventListener('input', (e) => performSearch(e.target.value, 'main'));
+            folderSearch.addEventListener('input', (e) => performSearch(e.target.value, 'folder'));
+            
+            // Click outside to close search results
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.search-container')) {
+                    document.getElementById('mainSearchResults').style.display = 'none';
+                    document.getElementById('folderSearchResults').style.display = 'none';
+                }
+            });
+        }
+
+        function performSearch(query, context) {
+            const resultsContainer = context === 'main' ? 
+                document.getElementById('mainSearchResults') : 
+                document.getElementById('folderSearchResults');
+            
+            if (!query) {
+                resultsContainer.style.display = 'none';
+                return;
+            }
+            
+            resultsContainer.innerHTML = '';
+            const results = [];
+            
+            if (context === 'main') {
+                // Search in all folders
+                data.folders.forEach(folder => {
+                    folder.texts.forEach(text => {
+                        if (text.title.toLowerCase().includes(query.toLowerCase())) {
+                            results.push({
+                                text: text,
+                                folder: folder
+                            });
+                        }
+                    });
+                });
+            } else {
+                // Search only in current folder
+                const folder = data.folders.find(f => f.id === currentFolder);
+                if (folder) {
+                    folder.texts.forEach(text => {
+                        if (text.title.toLowerCase().includes(query.toLowerCase())) {
+                            results.push({
+                                text: text,
+                                folder: folder
+                            });
+                        }
+                    });
+                }
+            }
+            
+            if (results.length > 0) {
+                resultsContainer.style.display = 'block';
+                results.forEach(result => {
+                    const item = document.createElement('div');
+                    item.className = 'search-result-item highlighted';
+                    item.innerHTML = `<strong>${result.text.title}</strong><br><small>${result.folder.name}</small>`;
+                    item.onclick = () => {
+                        if (context === 'main') {
+                            currentFolder = result.folder.id;
+                        }
+                        openText(result.text.id);
+                        resultsContainer.style.display = 'none';
+                    };
+                    resultsContainer.appendChild(item);
+                });
+            } else {
+                resultsContainer.style.display = 'none';
+            }
+        }
+
+        // Backup functions
+        function createBackup() {
+            const dataStr = JSON.stringify(data, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'zenvelope-backup-' + new Date().toISOString().slice(0, 10) + '.json';
+            link.click();
+            URL.revokeObjectURL(url);
+            if (window.DEBUG) console.log('Backup created');
+        }
+
+        function loadBackup(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const loadedData = JSON.parse(e.target.result);
+                    if (loadedData.folders) {
+                        data = loadedData;
+                        saveToLocalStorage();
+                        renderFolders();
+                        showMainView();
+                        alert('Backup loaded successfully!');
+                        if (window.DEBUG) console.log('Backup loaded:', data);
+                    } else {
+                        alert('Invalid backup format');
+                    }
+                } catch (error) {
+                    alert('Error loading backup');
+                    console.error('Backup load error:', error);
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        // Debug functions for console
+        if (window.DEBUG) {
+            window.debugFunctions = {
+                getData: () => data,
+                setData: (newData) => {
+                    data = newData;
+                    saveToLocalStorage();
+                    renderFolders();
+                },
+                addFolder: (name, desc, icon) => {
+                    const newFolder = {
+                        id: 'folder_' + Date.now(),
+                        name: name || 'New Folder',
+                        description: desc || '',
+                        icon: icon || '📁',
+                        texts: []
+                    };
+                    data.folders.push(newFolder);
+                    saveToLocalStorage();
+                    renderFolders();
+                    return newFolder;
+                },
+                addTextToFolder: (folderId, title, content) => {
+                    const folder = data.folders.find(f => f.id === folderId);
+                    if (!folder) {
+                        console.error('Folder not found');
+                        return;
+                    }
+                    const newText = {
+                        id: 'text_' + Date.now(),
+                        title: title || 'New Text',
+                        content: content || ''
+                    };
+                    folder.texts.push(newText);
+                    saveToLocalStorage();
+                    return newText;
+                },
+                deleteFolder: (folderId) => {
+                    const folderIndex = data.folders.findIndex(f => f.id === folderId);
+                    if (folderIndex === -1) {
+                        console.error('Folder not found');
+                        return;
+                    }
+                    data.folders.splice(folderIndex, 1);
+                    saveToLocalStorage();
+                    renderFolders();
+                    if (currentFolder === folderId) {
+                        showMainView();
+                    }
+                    return true;
+                },
+                deleteText: (textId) => {
+                    const folder = data.folders.find(f => f.id === currentFolder);
+                    if (!folder) {
+                        console.error('No folder selected');
+                        return;
+                    }
+                    const textIndex = folder.texts.findIndex(t => t.id === textId);
+                    if (textIndex === -1) {
+                        console.error('Text not found');
+                        return;
+                    }
+                    folder.texts.splice(textIndex, 1);
+                    saveToLocalStorage();
+                    renderTexts();
+                    return true;
+                },
+                clearAll: () => {
+                    if (confirm('Really delete all data?')) {
+                        data = { folders: [] };
+                        saveToLocalStorage();
+                        renderFolders();
+                    }
+                }
+            };
+            
+            console.log('Debug functions available:');
+            console.log('- debugFunctions.getData()');
+            console.log('- debugFunctions.setData(newData)');
+            console.log('- debugFunctions.addFolder(name, desc, icon)');
+            console.log('- debugFunctions.addTextToFolder(folderId, title, content)');
+            console.log('- debugFunctions.deleteFolder(folderId)');
+            console.log('- debugFunctions.deleteText(textId)');
+            console.log('- debugFunctions.clearAll()');
+        }
+
+        // Start
+        init();
+    </script>
+</body>
+</html>
